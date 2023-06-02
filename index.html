@@ -17,6 +17,27 @@
         }
       }
 
+    const IMAGES = [
+      '1.jpg',
+      '2.jpg',
+      '3.jpg',
+      '4.jpg',
+      '5.jpg',
+      '6.jpg',
+      '7.jpg',
+      '8.jpg',
+      '9.jpg',
+      '10.jpg',
+      '11.jpg',
+      '12.jpg',
+      '13.jpg',
+      '14.jpg',
+      '15.jpg',
+      '16.jpg',
+    ];
+
+    const PORTRAIT_IMAGES = ['3.jpg', '6.jpg'];
+
     const WORKS = [
       {
         "publication": "The Honest Ulsterman",
@@ -42,70 +63,70 @@
       {
         "publication": "HeadStuff Literature",
         "title": "Review of 'The Proverb Zoo'",
-        "type": "Review",
+        "type": "Reviews",
         "published": "May 12, 2018",
         "url": "https://headstuff.org/culture/literature/book-review-proverb-zoo-armel-dagorn/"
       },
       {
         "publication": "HeadStuff Literature",
         "title": "Review of 'Canticle'",
-        "type": "Review",
+        "type": "Reviews",
         "published": "Sep 22, 2018",
         "url": "https://headstuff.org/culture/literature/book-review-canticle-liz-mcskeane/"
       },
       {
         "publication": "Popula",
         "title": "Smoke and Mirrors",
-        "type": "Essay",
+        "type": "Essays",
         "published": "Feb 26, 2019",
         "url": "https://popula.com/2019/02/26/smoke-and-mirrors/"
       },
       {
         "publication": "The Baffler",
         "title": "The Plastic Paddy's Lament",
-        "type": "Review",
+        "type": "Reviews",
         "published": "Jun 12, 2019",
         "url": "https://thebaffler.com/latest/the-plastic-paddys-lament-sheehan"
       },
       {
         "publication": "LitHub",
         "title": "Dispatches from an extra on the set of Hulu's Normal People.",
-        "type": "Essay",
+        "type": "Essays",
         "published": "Feb 18, 2020",
         "url": "https://lithub.com/dispatches-from-an-extra-on-the-set-of-hulus-normal-people/"
       },
       {
         "publication": "The Journal",
         "title": "EU Mediterranian Borders ",
-        "type": "Essay",
+        "type": "Essays",
         "published": "Sep 9, 2020",
         "url": "https://www.thejournal.ie/readme/refugees-eu-mairead-mcguinness-5198971-Sep2020/"
       },
       {
         "publication": "Tribune",
         "title": "How Rentier Capitalism is Destroying Dublin",
-        "type": "Essay",
+        "type": "Essays",
         "published": "Jun 8, 2021",
         "url": "https://tribunemag.co.uk/2021/06/how-rentier-capitalism-is-destroying-dublin"
       },
       {
         "publication": "The Fence",
         "title": "TD Picture Article ",
-        "type": "Essay",
+        "type": "Essays",
         "published": "Nov 1, 2021",
         "url": "Print"
       },
       {
         "publication": "Lonely Planet",
         "title": "How to find ‘real’ traditional Irish music in Dublin",
-        "type": "Essay",
+        "type": "Essays",
         "published": "Jan 10, 2022",
         "url": "https://www.lonelyplanet.com/articles/traditional-irish-music-dublin"
       },
       {
         "publication": "The Baffler",
         "title": "Ireland We Hardly Knew Ye",
-        "type": "Review",
+        "type": "Reviews",
         "published": "Mar 29, 2022",
         "url": "https://thebaffler.com/latest/ireland-we-hardly-knew-ye-sheehan"
       },
@@ -119,7 +140,7 @@
       {
         "publication": "The Baffler",
         "title": "The Sounds of Internment",
-        "type": "Essay",
+        "type": "Essays",
         "published": "Aug 16, 2022",
         "url": "https://thebaffler.com/latest/the-sounds-of-internment-sheehan"
       },
@@ -133,13 +154,25 @@
       {
         "publication": "The Irish Times",
         "title": "Rebel Music Article",
-        "type": "Essay",
+        "type": "Essays",
         "published": "May 27, 2023",
         "url": "https://www.irishtimes.com/opinion/2023/05/28/irish-rebel-music-is-more-than-an-endorsement-of-the-ira-it-is-a-way-to-connect-with-the-past/"
       },
     ];
 
+    function shuffleArray(array) {
+        for (var i = array.length - 1; i > 0; i--) {
+            var j = Math.floor(Math.random() * (i + 1));
+            var temp = array[i];
+            array[i] = array[j];
+            array[j] = temp;
+        }
+    }
+
       window.addEventListener("DOMContentLoaded", () => {
+        let copiedImages = [...IMAGES];
+        shuffleArray(copiedImages);
+
         let worksGroupedByType = WORKS.reduce(function (accumulator, work) {
           if (accumulator[work.type]) {
             accumulator[work.type].push(work);
@@ -164,6 +197,8 @@
           let section = document.querySelector(`.hidden [data-section]`).cloneNode(true);
           section.classList.remove(`hidden`);
 
+          section.classList.add(`row-span-${Math.floor(worksForType.length / 4)}`);
+
           section.querySelector(`[data-title]`).innerHTML = type;
 
           container.appendChild(section);
@@ -182,10 +217,25 @@
 
             section.appendChild(entry);
           })
+
+
+          // Allow two images between sections until we've run out of sections, then allow all remaining images
+          let imageLimit = type === types.at(-1) ? copiedImages.length : 2;
+
+          for (let i = 0; i < imageLimit; i++) {
+            let image = copiedImages.pop();
+            if (image) {
+              let imgElement = document.createElement(`img`);
+              imgElement.src = `./assets/${image}`;
+              imgElement.classList.add(`w-full`, `h-auto`, `object-cover`, `object-center`, `rounded`);
+              section.insertAdjacentElement(`afterend`, imgElement);
+
+              if (PORTRAIT_IMAGES.includes(image)) {
+                imgElement.classList.add(`row-span-2`);
+              }
+            }
+          }
         });
-
-
-
       });
     </script>
   </head>
@@ -195,12 +245,12 @@
 
 
       <div class="flex flex-col flex-1 items-center md:px-8">
-        <div class="flex flex-col h-96 w-full bg-cover bg-center" style="background-image: url('./assets/14.JPG')">
-          
+        <div class="flex flex-col items-center justify-center h-96 w-full bg-cover bg-center" style="background-image: url('./assets/cover.JPG')">
+          <h1 class="font-outfit font-extralight text-white text-4xl drop-shadow-lg shadow-black text-center">JACK<br>SHEEHAN</h1>
         </div>
 
-        <div class="flex flex-1 flex flex-col md:flex-row md:space-x-12 pt-8 px-8 md:px-0">
-          <div class="flex flex-col space-y-8 max-w-full md:max-w-md">
+        <div class="grid md:grid-cols-2 grid-cols-1 gap-12 grid-flow-row-dense py-8 px-8 md:px-0 w-full md:max-w-4xl" data-works>
+          <div class="flex flex-col space-y-8 w-full md:max-w-md">
             <div class="flex flex-col space-y-4">
               <p class="text-gray-900 text-md font-outfit font-semibold">
                 ABOUT JACK
@@ -210,29 +260,15 @@
               <div class="font-outfit leading-loose text-justify text-gray-700">
                 Jack Sheehan is a writer, historian, editor and photographer from Dublin, Ireland, based in New York. He graduated with an MPhil in Creative Writing from Trinity College Dublin in 2016, and recently completed a PhD in Modern Irish and U.S. History from the same institution. He was named a Young Writer Delegate at the 2018 Cúirt International Festival of Literature. His fiction, essays and reviews have appeared in The Baffler, The Irish Times, Lonely Planet, The Fence, LitHub, Tribune and The London Magazine, among others. He lives in Harlem with his wife.            </div>
             </div>
-
-            <div class="flex flex-col space-y-4">
-              <p class="text-gray-900 text-md font-outfit font-semibold">
-                SOCIAL
-              </p>
-              <hr>
-
-              <div class="font-outfit text-gray-700">
-                <a class="hover:underline" href="twitter.com">Twitter</a> &bull; <a class="hover:underline" href="instagram.com">Instagram</a> &bull; jack@email.com
-              </div>
-            </div>
           </div>
 
-
-          <div class="flex flex-col space-y-8 max-w-full md:max-w-md" data-works>
-          </div>
         </div>
       </div>
     </div>
 
     <div class="hidden" data-components>
       <!-- A section component listing works-->
-      <div class="flex flex-col space-y-4 hidden" data-section>
+      <div class="flex flex-col space-y-4 hidden md:max-w-md w-full" data-section>
         <p class="text-gray-900 text-md font-outfit font-semibold" data-title>
           <!--Section Title-->
         </p>
