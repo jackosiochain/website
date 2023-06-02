@@ -16,6 +16,177 @@
           }
         }
       }
+
+    const WORKS = [
+      {
+        "publication": "The Honest Ulsterman",
+        "title": "Far From the City",
+        "type": "Fiction",
+        "published": "Jul 1, 2014",
+        "url": "https://humag.co/prose/far-from-the-city"
+      },
+      {
+        "publication": "HeadStuff Literature",
+        "title": "Orphans",
+        "type": "Fiction",
+        "published": "Mar 5, 2018",
+        "url": "https://headstuff.org/culture/literature/fortnightly-fiction-orphans-jack-sheehan/"
+      },
+      {
+        "publication": "The Cardiff Review",
+        "title": "The Last Flight",
+        "type": "Fiction",
+        "published": "Jun 11, 2018",
+        "url": "https://www.cardiffreview.com/post/2018/06/10/the-last-flight/"
+      },
+      {
+        "publication": "HeadStuff Literature",
+        "title": "Review of 'The Proverb Zoo'",
+        "type": "Review",
+        "published": "May 12, 2018",
+        "url": "https://headstuff.org/culture/literature/book-review-proverb-zoo-armel-dagorn/"
+      },
+      {
+        "publication": "HeadStuff Literature",
+        "title": "Review of 'Canticle'",
+        "type": "Review",
+        "published": "Sep 22, 2018",
+        "url": "https://headstuff.org/culture/literature/book-review-canticle-liz-mcskeane/"
+      },
+      {
+        "publication": "Popula",
+        "title": "Smoke and Mirrors",
+        "type": "Essay",
+        "published": "Feb 26, 2019",
+        "url": "https://popula.com/2019/02/26/smoke-and-mirrors/"
+      },
+      {
+        "publication": "The Baffler",
+        "title": "The Plastic Paddy's Lament",
+        "type": "Review",
+        "published": "Jun 12, 2019",
+        "url": "https://thebaffler.com/latest/the-plastic-paddys-lament-sheehan"
+      },
+      {
+        "publication": "LitHub",
+        "title": "Dispatches from an extra on the set of Hulu's Normal People.",
+        "type": "Essay",
+        "published": "Feb 18, 2020",
+        "url": "https://lithub.com/dispatches-from-an-extra-on-the-set-of-hulus-normal-people/"
+      },
+      {
+        "publication": "The Journal",
+        "title": "EU Mediterranian Borders ",
+        "type": "Essay",
+        "published": "Sep 9, 2020",
+        "url": "https://www.thejournal.ie/readme/refugees-eu-mairead-mcguinness-5198971-Sep2020/"
+      },
+      {
+        "publication": "Tribune",
+        "title": "How Rentier Capitalism is Destroying Dublin",
+        "type": "Essay",
+        "published": "Jun 8, 2021",
+        "url": "https://tribunemag.co.uk/2021/06/how-rentier-capitalism-is-destroying-dublin"
+      },
+      {
+        "publication": "The Fence",
+        "title": "TD Picture Article ",
+        "type": "Essay",
+        "published": "Nov 1, 2021",
+        "url": "Print"
+      },
+      {
+        "publication": "Lonely Planet",
+        "title": "How to find ‘real’ traditional Irish music in Dublin",
+        "type": "Essay",
+        "published": "Jan 10, 2022",
+        "url": "https://www.lonelyplanet.com/articles/traditional-irish-music-dublin"
+      },
+      {
+        "publication": "The Baffler",
+        "title": "Ireland We Hardly Knew Ye",
+        "type": "Review",
+        "published": "Mar 29, 2022",
+        "url": "https://thebaffler.com/latest/ireland-we-hardly-knew-ye-sheehan"
+      },
+      {
+        "publication": "The Pig's Back",
+        "title": "Earthquake Day",
+        "type": "Fiction",
+        "published": "Dec 1, 2022",
+        "url": "Print"
+      },
+      {
+        "publication": "The Baffler",
+        "title": "The Sounds of Internment",
+        "type": "Essay",
+        "published": "Aug 16, 2022",
+        "url": "https://thebaffler.com/latest/the-sounds-of-internment-sheehan"
+      },
+      {
+        "publication": "The London Magazine",
+        "title": "Gleanings",
+        "type": "Fiction",
+        "published": "May 18, 2023",
+        "url": "https://thelondonmagazine.org/fiction-gleanings-by-jack-sheehan/"
+      },
+      {
+        "publication": "The Irish Times",
+        "title": "Rebel Music Article",
+        "type": "Essay",
+        "published": "May 27, 2023",
+        "url": "https://www.irishtimes.com/opinion/2023/05/28/irish-rebel-music-is-more-than-an-endorsement-of-the-ira-it-is-a-way-to-connect-with-the-past/"
+      }
+    ];
+
+      window.addEventListener("DOMContentLoaded", () => {
+        let worksGroupedByType = WORKS.reduce(function (accumulator, work) {
+          if (accumulator[work.type]) {
+            accumulator[work.type].push(work);
+          } else {
+            accumulator[work.type] = [work];
+          }
+
+          return accumulator;
+        }, {});
+
+        let types = Object.keys(worksGroupedByType);
+
+        let container = document.querySelector(`[data-works]`);
+
+        types.forEach(type => {
+          let worksForType = worksGroupedByType[type];
+
+          let worksSortedByPublication = worksForType.sort((a, b) => {
+            return new Date(b.published) - new Date(a.published);
+          });
+
+          let section = document.querySelector(`.hidden [data-section]`).cloneNode(true);
+          section.classList.remove(`hidden`);
+
+          section.querySelector(`[data-title]`).innerHTML = type;
+
+          container.appendChild(section);
+
+          worksSortedByPublication.forEach(work => {
+            let entry = document.querySelector(`.hidden [data-work-entry]`).cloneNode(true);
+            entry.classList.remove(`hidden`);
+
+            entry.querySelector(`[data-link]`).innerHTML = `${work.title}`;
+
+            if (work.url.startsWith(`http`)) {
+              entry.querySelector(`[data-link]`).href = work.url;
+            }
+
+            entry.querySelector(`[data-details]`).innerHTML = `${work.publication} • ${work.published}`;
+
+            section.appendChild(entry);
+          })
+        });
+
+
+
+      });
     </script>
   </head>
 
@@ -31,13 +202,12 @@
 
           <div class="flex flex-col space-y-4">
             <p class="text-gray-900 text-md font-outfit font-semibold">
-              ABOUT ME
+              ABOUT JACK
             </p>
             <hr>
 
             <div class="font-outfit leading-loose text-justify text-gray-700">
-              A Dublin-born writer now based in New York, he is a masterful wordsmith with a profound appreciation for history and storytelling. Having studied History at Trinity College Dublin, he furthered his passion by obtaining a Master's in creative writing and is currently completing a PhD in Folk Music History. Jack's captivating prose has been published in prestigious global publications, where he skillfully intertwines themes of humanity, culture, and the longing for connection. Drawing inspiration from the vibrant energy of New York City and his Irish roots, Jack's writing effortlessly transports readers on introspective journeys of exploration and self-discovery.
-            </div>
+              Jack Sheehan is a writer, historian, editor and photographer from Dublin, Ireland, based in New York. He graduated with an MPhil in Creative Writing from Trinity College Dublin in 2016, and recently completed a PhD in Modern Irish and U.S. History from the same institution. He was named a Young Writer Delegate at the 2018 Cúirt International Festival of Literature. His fiction, essays and reviews have appeared in The Baffler, The Irish Times, Lonely Planet, The Fence, LitHub, Tribune and The London Magazine, among others. He lives in Harlem with his wife.            </div>
           </div>
 
           <div class="flex flex-col space-y-4">
@@ -53,61 +223,39 @@
         </div>
 
 
-        <div class="flex flex-col space-y-8 max-w-full md:max-w-md">
+        <div class="flex flex-col space-y-8 max-w-full md:max-w-md" data-works>
           <div class="h-24 hidden md:block">
             <!--spacer-->
           </div>
-
-          <div class="flex flex-col space-y-4">
-            <p class="text-gray-900 text-md font-outfit font-semibold">
-              ESSAYS
-            </p>
-            <hr>
-
-            <div class="flex flex-col space-y-1">
-              <a class="font-semibold text-md font-outfit hover:underline" href="https://tribunemag.co.uk/2021/06/how-rentier-capitalism-is-destroying-dublin">
-                How Rentier Capitalism is Destroying Dublin
-              </a>
-              <div class="font-outfit text-gray-700">
-                The Tribune &bull; June 2021
-            </div>
-
-            <div class="flex flex-col space-y-1">
-              <a class="font-semibold text-md font-outfit hover:underline" href="https://tribunemag.co.uk/2021/06/how-rentier-capitalism-is-destroying-dublin">
-                Another one
-              </a>
-              <div class="font-outfit text-gray-700">
-                The Times &bull; May 2020
-            </div>
-
-            <div class="flex flex-col space-y-1">
-              <a class="font-semibold text-md font-outfit hover:underline" href="https://tribunemag.co.uk/2021/06/how-rentier-capitalism-is-destroying-dublin">
-                Another third one
-              </a>
-              <div class="font-outfit text-gray-700">
-                The Telegraph &bull; May 2019
-            </div>
-
-          </div>
-
-          <div class="flex flex-col space-y-4 pt-12">
-            <p class="text-gray-900 text-md font-outfit font-semibold">
-              SHORT STORIES
-            </p>
-            <hr>
-
-            <div class="flex flex-col space-y-1">
-              <a class="font-semibold text-md font-outfit hover:underline" href="https://tribunemag.co.uk/2021/06/how-rentier-capitalism-is-destroying-dublin">
-                The Stillorgan Drinking Shack
-              </a>
-              <div class="font-outfit text-gray-700">
-                Stillorgan &bull; June 2005
-            </div>
-
-          </div>
-
         </div>
+
+
+
       </div>
     </div>
+
+    <div class="hidden" data-components>
+      <!-- A section component listing works-->
+      <div class="flex flex-col space-y-4 hidden" data-section>
+        <p class="text-gray-900 text-md font-outfit font-semibold" data-title>
+          <!--Section Title-->
+        </p>
+        <hr />
+        <!--Section Content-->
+      
+      </div>
+
+
+      <!-- A component displaying a single publication -->
+      <div class="flex flex-col space-y-1" data-work-entry>
+        <a class="font-semibold text-md font-outfit hover:underline cursor-pointer" target="_blank" href="" data-link>
+          <!--Work Title-->
+        </a>
+        <div class="font-outfit text-gray-700" data-details>
+          <!--Work Details-->
+      </div>
+    </div>
+
+
   </body>
 </html>
